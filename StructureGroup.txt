@@ -1,0 +1,37 @@
+deleteall;
+ring_width = bus_width;
+addrect;
+set("x",0);
+set("x span",lx);
+set("y span",bus_width);
+set("y",radius+gap+bus_width/2 + ring_width/2);
+?(radius+gap+bus_width/2 + ring_width/2);
+copy(0,-2*(radius+gap+bus_width/2 + ring_width/2),0);
+
+copy;
+set("y",radius);
+set("x span",Lc);
+
+copy;
+set("y",-radius);
+
+addring;
+set("theta start",-90);
+set("theta stop",90);
+set("inner radius",radius-ring_width/2);
+set("outer radius",radius+ring_width/2);
+set("x",Lc/2);
+
+copy;
+set("theta start",90);
+set("theta stop",270);
+set("x",-Lc/2);
+
+
+selectall;
+set("material",material);
+if(material=="<Object defined dielectric>") {
+  set("index",index);
+}
+set("z min",0);
+set("z max",height);

@@ -1,0 +1,192 @@
+#########################################
+## File Name: MicroRing.lsf
+## Descript: A simple file for simulating
+##          with lumerical script.
+## Author @ Zhenyu ZHAO 2020/08/11
+#########################################
+
+deleteall;
+## Parameters
+
+
+## Silica Substrate
+addrect;
+set("name","Rectangle");
+set("x",0);
+set("x span",50e-6);
+set("y",0);
+set("y span",65e-6);
+set("z",-0.3e-6);
+set("z span",0.6e-6);
+set("material","SiO2 (Glass) - Palik");
+
+## Silicon structures
+#### prop: 0-number 1-length 2-length 3-time 4-frequency 5-material
+addstructuregroup;
+set("name","structure group");
+set("x",0);
+set("y",0);
+set("z",0);
+adduserprop("Lc",2,0);
+adduserprop("bus_width",2,0.35e-6);
+adduserprop("gap",2,0.13e-6);
+adduserprop("height",2,0.22e-6);
+adduserprop("index",0,3.5);
+adduserprop("lx",2,45e-6);
+adduserprop("material",5,"Si (Silicon) - Palik");
+adduserprop("radius",2,5e-6);
+adduserprop("ring_width",2,0.35e-6);
+
+StructureGroupScript = read('./StructureGroup.txt'); ## where defines the structure
+set("script",StructureGroupScript);
+
+## Source 
+addmode;
+set("injection axis","x-axis");
+set("x",-16e-6);
+set("y",5.5e-6);
+set("y span",3e-6);
+set("z",0.11e-6);
+set("z span",0.6e-6);
+set("wavelength start",1.5e-6);
+set("wavelength stop",1.6e-6);
+
+## Through Port Power Monitor
+#### monitor type: 1-Point 2-Linear X 3-Linear Y 4-Linear Z 5-2D X-normal 6-2D Y-normal
+#### 7-2D Z-normal 8-3D
+addpower;
+set("name","Through");
+set("monitor type",8);  
+set("x",15e-6);
+set("x span",0);
+set("y",5.5e-6);
+set("y span",2e-6);
+set("z",0.11e-6);
+set("z span",0.6e-6);
+set("override global monitor settings",1);
+set("frequency points",5000);
+
+## Through Port Time Monitor
+#### monitor type: 1-Point 2-Linear X 3-Linear Y 4-Linear Z 5-2D X-normal 6-2D Y-normal
+#### 7-2D Z-normal 8-3D
+addtime;
+set("name","time_through");
+set("monitor type",1);  
+set("x",15e-6);
+set("y",5.5e-6);
+set("z",0.11e-6);
+
+## Drop Port Power Monitor
+#### monitor type: 1-Point 2-Linear X 3-Linear Y 4-Linear Z 5-2D X-normal 6-2D Y-normal
+#### 7-2D Z-normal 8-3D
+addpower;
+set("name","Drop");
+set("monitor type",8);  
+set("x",-15e-6);
+set("x span",0);
+set("y",-5.5e-6);
+set("y span",2e-6);
+set("z",0.11e-6);
+set("z span",0.6e-6);
+set("override global monitor settings",1);
+set("frequency points",5000);
+
+## Drop Port Time Monitor
+#### monitor type: 1-Point 2-Linear X 3-Linear Y 4-Linear Z 5-2D X-normal 6-2D Y-normal
+#### 7-2D Z-normal 8-3D
+addtime;
+set("name","time_drop");
+set("monitor type",1);  
+set("x",-15e-6);
+set("y",-5.5e-6);
+set("z",0.11e-6);
+
+## Add FDTD region
+#### dimension: 1-2D 2-3D
+addfdtd;
+set("dimension",1);  
+set("x",0);
+set("x span",35e-6);
+set("y",0);
+set("y span",25e-6);
+set("z",0);
+set("z span",1e-6);
+set("simulation time",5000e-15);
+set("background index",1.444);
+set("mesh accuracy",5);
+
+## Add Full Profile Monitor 
+#### monitor type: 1-Point 2-Linear X 3-Linear Y 4-Linear Z 5-2D X-normal 6-2D Y-normal
+#### 7-2D Z-normal 8-3D
+addpower;
+set("name","Full_profile");
+set("monitor type",7);  
+set("x",0);
+set("x span",38e-6);
+set("y",0);
+set("y span",28e-6);
+set("z",0);
+set("override global monitor settings",1);
+set("frequency points",1);
+set("output Px",1);
+set("output Py",1);
+set("output Pz",1);
+set("output power",0);
+
+## Add index Monitor
+#### monitor type: 1-2D X-normal 2-2D Y-normal 3-2D Z-normal 4-3D
+addindex;
+set("name","index");
+set("monitor type",3);  
+set("x",0);
+set("x span",38e-6);
+set("y",0);
+set("y span",28e-6);
+set("z",0);
+set("override global monitor settings",1);
+set("frequency points",1);
+#n = getresult("index","index preview");
+#visualize(n);
+
+## Add Sweep
+# add a sweep
+deletesweep("gap_sweep_script");
+addsweep(0);
+setsweep("sweep", "name", "gap_sweep_script");
+setsweep("gap_sweep_script", "type", "Ranges");
+setsweep("gap_sweep_script", "number of points", 10); 
+para = struct;
+para.Name = "gap";
+para.Parameter = "::model::structure group::gap";
+para.Type = "Length";
+para.Start = 0.1e-6;
+para.Stop = 0.5e-6;
+para.Units = "microns";
+addsweepparameter("gap_sweep_script", para);
+
+
+#addsweep(0);
+#setsweep("sweep","name","gap_sweep");
+#setsweep("gap_sweep","type","Values");
+#setsweep("gap_sweep","number of points",5);
+#para = struct;
+#para.Parameter = "::model::structure group::gap";
+#para.Type = "Length";
+#para.Value_1 = 0.1e-6;
+#para.Value_2 = 0.2e-6;
+#para.Value_3 = 0.3e-6;
+#para.Value_4 = 0.4e-6;
+#para.Value_5 = 0.5e-6;
+#addsweepparameter("gap_sweep", para);
+
+result = struct;
+result.Name = "T";
+result.Result = "::model::Drop::T";
+# add the results R & T to the sweep
+addsweepresult("gap_sweep_script", result);
+
+
+## For RUN or SWEEP
+#run;
+#runsweep;
+#runsweep("gap_sweep_script");

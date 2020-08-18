@@ -1,2 +1,17 @@
-# LumericalScriptExample
- How to create a lumerical FDTD simulation with Lumerical script. The example is a simulation for micro-ring.
+# Lumerical Script Example
+   An example for creating a lumerical FDTD simulation with Lumerical script. The structure in this example is a micro-ring.
+
+## How to convert .lsf to .fsp
+
+1. Open a lumerical FDTD solution window.
+2. Open MicroRing.lsf in its Script File Editor.
+3. Save this FDTD solution(.fsp) to the same dir with MicroRing.lsf. (Otherwise, can not import StructureGroup.txt properly)
+4. Run MicroRing.lsf in Script File Editor.
+5. Save this FDTD solution(.fsp).
+
+
+
+## Why use Lumerical Script
+
+Others can be well aware of all the settings for this simulation.
+
