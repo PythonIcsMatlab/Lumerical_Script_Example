@@ -1,5 +1,5 @@
 # Lumerical Script Example
-   An example for creating a lumerical FDTD simulation with Lumerical script. The structure in this example is a micro-ring.
+   An example for creating a lumerical FDTD simulation with Lumerical scripting language. The structure in this example is a micro-ring.
 
 ## How to convert .lsf to .fsp
 
