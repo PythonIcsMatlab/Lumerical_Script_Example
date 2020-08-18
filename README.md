@@ -15,3 +15,8 @@
 
 Others can be well aware of all the settings for this simulation.
 
+
+
+## Reference
+
+https://support.lumerical.com/hc/en-us/categories/360001998954-Scripting-Language
